@@ -37,7 +37,9 @@ class AuthController extends Controller
         $token = $request->user()->createToken('token')->plainTextToken;
         $cookie = cookie('jwt', $token, 60*24);
 
-        return response([])->cookie($cookie);
+        return response([
+            'message' => 'Успешно'
+        ])->cookie($cookie);
 
 
     }
@@ -45,8 +47,9 @@ class AuthController extends Controller
         return $request->user();
     }
 
-    public function logout() {
+    public function logout(Request $request) {
         $cookie = Cookie::forget('jwt');
+        $request->user()->tokens()->delete();
         return response([
             'message' => 'Успешно'
         ])->cookie($cookie);
